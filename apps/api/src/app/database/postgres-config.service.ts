@@ -11,26 +11,44 @@ export class PostgresConfigService implements TypeOrmOptionsFactory {
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
-      type: this.configService.getOrThrow('database.type', { infer: true }),
-      host: this.configService.getOrThrow('database.host', { infer: true }),
-      port: this.configService.getOrThrow('database.port', { infer: true }),
-      username: this.configService.getOrThrow('database.username', {
+      type: this.configService.getOrThrow<AllConfigType>('database.type', {
         infer: true,
       }),
-      password: this.configService.getOrThrow('database.password', {
+      host: this.configService.getOrThrow<AllConfigType>('database.host', {
         infer: true,
       }),
-      database: this.configService.getOrThrow('database.name', { infer: true }),
+      port: this.configService.getOrThrow<AllConfigType>('database.port', {
+        infer: true,
+      }),
+      username: this.configService.getOrThrow<AllConfigType>(
+        'database.username',
+        {
+          infer: true,
+        }
+      ),
+      password: this.configService.getOrThrow<AllConfigType>(
+        'database.password',
+        {
+          infer: true,
+        }
+      ),
+      database: this.configService.getOrThrow<AllConfigType>('database.name', {
+        infer: true,
+      }),
       entities: [Organization, Role, User],
       migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
       migrationsRun: false,
-      synchronize: this.configService.getOrThrow('database.synchronize', {
-        infer: true,
-      }),
+      synchronize: this.configService.getOrThrow<AllConfigType>(
+        'database.synchronize',
+        {
+          infer: true,
+        }
+      ),
       dropSchema: false,
       logging:
-        this.configService.getOrThrow('app.nodeEnv', { infer: true }) !==
-        Environment.Production,
+        this.configService.getOrThrow<AllConfigType>('app.nodeEnv', {
+          infer: true,
+        }) !== Environment.Production,
       cli: {
         entitiesDir: 'src',
 
@@ -39,22 +57,33 @@ export class PostgresConfigService implements TypeOrmOptionsFactory {
       extra: {
         // based on https://node-postgres.com/apis/pool
         // max connection pool size
-        max: this.configService.get('database.maxConnections', { infer: true }),
-        ssl: this.configService.get('database.sslEnabled', { infer: true })
+        max: this.configService.getOrThrow<AllConfigType>(
+          'database.maxConnections',
+          {
+            infer: true,
+          }
+        ),
+        ssl: this.configService.getOrThrow<AllConfigType>(
+          'database.sslEnabled',
+          { infer: true }
+        )
           ? {
-              rejectUnauthorized: this.configService.get(
+              rejectUnauthorized: this.configService.getOrThrow<AllConfigType>(
                 'database.rejectUnauthorized',
                 { infer: true }
               ),
               ca:
-                this.configService.get('database.ca', { infer: true }) ??
-                undefined,
+                this.configService.getOrThrow<AllConfigType>('database.ca', {
+                  infer: true,
+                }) ?? undefined,
               key:
-                this.configService.get('database.key', { infer: true }) ??
-                undefined,
+                this.configService.getOrThrow<AllConfigType>('database.key', {
+                  infer: true,
+                }) ?? undefined,
               cert:
-                this.configService.get('database.cert', { infer: true }) ??
-                undefined,
+                this.configService.getOrThrow<AllConfigType>('database.cert', {
+                  infer: true,
+                }) ?? undefined,
             }
           : undefined,
       },

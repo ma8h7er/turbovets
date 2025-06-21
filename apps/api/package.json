@@ -8,7 +8,9 @@
     "postmigration:generate": "nx lint api -- --fix",
     "migration:run": "npm run typeorm -- --dataSource=src/app/database/cli-data-source.ts migration:run",
     "migration:revert": "npm run typeorm -- --dataSource=src/app/database/cli-data-source.ts migration:revert",
-    "schema:drop": "npm run typeorm -- --dataSource=src/app/database/cli-data-source.ts schema:drop"
+    "schema:drop": "npm run typeorm -- --dataSource=src/app/database/cli-data-source.ts schema:drop",
+    "seed:run": "ts-node --project ./tsconfig.app.json -r tsconfig-paths/register ./src/app/database/seed/run-seed.ts",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\""
   },
   "nx": {
     "targets": {
