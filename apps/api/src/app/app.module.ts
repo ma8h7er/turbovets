@@ -5,6 +5,9 @@ import appConfig from './config/app.config';
 import databaseConfig from './database/config/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresConfigService } from './database/postgres-config.service';
+import { TaskModule } from './task/task.module';
+import { UserModule } from './user/user.module';
+import { AuthModule } from '@turbovets/auth';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { PostgresConfigService } from './database/postgres-config.service';
       useClass: PostgresConfigService,
     }),
     HomeModule,
+    AuthModule,
+    TaskModule,
+    UserModule,
   ],
 })
 export class AppModule {}

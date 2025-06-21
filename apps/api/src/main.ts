@@ -5,6 +5,7 @@ import { useContainer } from 'class-validator';
 import { ConfigService } from '@nestjs/config';
 import { AllConfigType } from './app/config/config.type';
 import validationOptions from './app/utils/validation-options';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
@@ -24,6 +25,16 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
   app.useGlobalPipes(new ValidationPipe(validationOptions));
+
+  // Setup Swagger API documentation. URI /api-docs
+  const options = new DocumentBuilder()
+    .setTitle('Turbovets API')
+    .setDescription('Turbovets API docs')
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api-docs', app, document);
 
   const port = configService.getOrThrow('app.port', { infer: true });
   await app.listen(port);
