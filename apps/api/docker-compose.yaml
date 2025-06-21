@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:17.4-alpine
+    ports:
+      - ${DATABASE_PORT}:5432
+    volumes:
+      - turbovets-db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - ${APP_PORT}:${APP_PORT}
+  #   depends_on:
+  #     - postgres
+
+volumes:
+  turbovets-db:

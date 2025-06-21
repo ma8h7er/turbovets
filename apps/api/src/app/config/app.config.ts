@@ -10,12 +10,7 @@ import {
   Min,
 } from 'class-validator';
 import { validateConfig } from '@turbovets/common';
-
-enum Environment {
-  Development = 'development',
-  Production = 'production',
-  Test = 'test',
-}
+import { Environment } from '../enums/environment.enum';
 
 class EnvironmentVariablesValidator {
   @IsEnum(Environment)
