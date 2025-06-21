@@ -75,3 +75,19 @@ To setup the application on local environment, please make sure you have [Docker
 8. Start the frontend app by opening a new Terminal window and running `nx serve dashboard`.
 9. Access the app at `http://localhost/4200`
 10. You can access the API docs at `http://localhost:3000/api-docs`
+
+## Future Improvements
+
+This application is a basic representation of a CRUD app using node.js as a backend API and Angular as a frontend UI. Although, it can be improved by adding several feature like:
+
+1. Build a secure authentication using JWT. In the backend we can generate a JWT token for each user after singing-in with limited TTL (time to live), and generate a refresh token that can be used by the frontend app when the main JWT token is expired so the token will be refreshed and a new token will be sent to the user. The token will be used by the frontend app to communicate with the backend by sending the token in the `Authorization` request header like:
+
+    ```
+        Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    ```
+
+2. In addition for a secure production-ready application, we can make the roles more dynamic. Currently the app uses the role name as identifier to decide the permission the user have, but that can be improved by adding a new `permissions` database table and each role will have many permissions. That makes it more dynamic and we can add as many roles as we want without limiting it to the role name. Also, we can create a page for adding, editing and attaching permissions to the role.
+
+3. The backend app can be more scallable and restructure it to microservices architecture. In this way we can build different services for api-gateway, authentication, task management and more to serve more users and make the development process more flexible if we have many dev teams so each team can focus on one service at a time.
+
+4. The frontend can be improved by designing modern user interfaces and build reusable Angular components. We can add sign-up and sign-in page for authentication.
