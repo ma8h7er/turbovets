@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { Organization, Role, User } from '@turbovets/auth';
+import { Task } from '../task/entities/task.entity';
 
 const AppDataSource = new DataSource({
   type: process.env.DATABASE_TYPE,
@@ -16,7 +17,7 @@ const AppDataSource = new DataSource({
   dropSchema: false,
   keepConnectionAlive: true,
   logging: process.env.NODE_ENV !== 'production',
-  entities: [Organization, Role, User],
+  entities: [Organization, Role, User, Task],
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
   cli: {
     entitiesDir: 'src',

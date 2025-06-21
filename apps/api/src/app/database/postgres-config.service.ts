@@ -4,6 +4,7 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { Environment } from '../enums/environment.enum';
 import { AllConfigType } from '../config/config.type';
 import { Organization, Role, User } from '@turbovets/auth';
+import { Task } from '../task/entities/task.entity';
 
 @Injectable()
 export class PostgresConfigService implements TypeOrmOptionsFactory {
@@ -35,7 +36,7 @@ export class PostgresConfigService implements TypeOrmOptionsFactory {
       database: this.configService.getOrThrow<AllConfigType>('database.name', {
         infer: true,
       }),
-      entities: [Organization, Role, User],
+      entities: [Organization, Role, User, Task],
       migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
       migrationsRun: false,
       synchronize: this.configService.getOrThrow<AllConfigType>(

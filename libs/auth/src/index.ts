@@ -3,3 +3,8 @@ export { Organization } from './lib/entities/organization.entity';
 export { User } from './lib/entities/user.entity';
 export { Role } from './lib/entities/role.entity';
 export { RoleEnum } from './lib/enums/role.enum';
+export { UserResponseDto } from './lib/dto/user-response.dto';
+export { UserService } from './lib/services/user.service';
+export { RolesGuard } from './lib/guards/roles.guard';
+export { Roles } from './lib/decorators/roles.decorator';
+export { AuthGuard } from './lib/guards/auth.guard';
