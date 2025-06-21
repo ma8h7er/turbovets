@@ -32,11 +32,16 @@ export class Navbar {
   users: User[] = [];
 
   constructor() {
+    // load demo users in top-right nav menu
     this._userService.users.subscribe((users) => (this.users = users));
     // get current user
     this._authService.authUser.subscribe((user) => (this.authUser = user));
   }
 
+  /**
+   * When changing the current user
+   * @param user
+   */
   changeUser(user: User) {
     this._authService.currentUser = user;
   }

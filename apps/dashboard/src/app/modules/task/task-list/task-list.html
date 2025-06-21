@@ -1,0 +1,73 @@
+<!-- Header -->
+<div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 border-b">
+    <!-- Title -->
+    <div class="flex items-center gap-3 text-4xl font-extrabold tracking-tight">
+        <span>Tasks</span>
+        @if(loading()) {
+        <span class="inline-flex w-[20px]">
+            <mat-spinner></mat-spinner>
+        </span>
+        }
+    </div>
+    <!-- Actions -->
+    <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+        <!-- Search -->
+        <mat-form-field class="fuse-mat-dense fuse-mat-rounded min-w-64" [subscriptSizing]="'dynamic'">
+            <input matInput [formControl]="searchInputControl" [autocomplete]="'off'"
+                placeholder="Search tasks">
+        </mat-form-field>
+        <!-- Create task button -->
+        <a class="ml-4" mat-flat-button [color]="'primary'" [routerLink]="['/tasks/create']">
+            Create new task
+        </a>
+    </div>
+</div>
+
+
+<table mat-table [dataSource]="tasks" class="mat-elevation-z8" matSort (matSortChange)="sortData($event)">
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="id"> ID </th>
+        <td mat-cell *matCellDef="let task"> {{task.id}} </td>
+    </ng-container>
+
+    <!-- Title Column -->
+    <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="title"> Title </th>
+        <td mat-cell *matCellDef="let task"> {{task.title}} </td>
+    </ng-container>
+
+    <!-- User Column -->
+    <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef> User </th>
+        <td mat-cell *matCellDef="let task"> {{task.user?.firstName}} </td>
+    </ng-container>
+
+    <!-- Org Column -->
+    <ng-container matColumnDef="organization">
+        <th mat-header-cell *matHeaderCellDef> Organization </th>
+        <td mat-cell *matCellDef="let task"> {{task.user?.organization?.name}} </td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let task">
+            @if(authUser && hasActionPermission) {
+            <div class="flex items-center gap-4">
+                <a matIconButton aria-label="Edit task" [routerLink]="['/tasks', task.id]">
+                    <mat-icon>edit</mat-icon>
+                </a>
+                <button matIconButton aria-label="Delete task" (click)="onDeleteTask(task)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+            }
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

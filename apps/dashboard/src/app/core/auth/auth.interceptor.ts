@@ -9,7 +9,8 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 
 /**
- * Intercept
+ * Intercept the HTTP request
+ * Set the current user id in the x-user-id header. It's used for basic authentication
  *
  * @param req
  * @param next

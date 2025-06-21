@@ -19,5 +19,6 @@ export class AuthService {
 
   signOut() {
     localStorage.removeItem('currentUser');
+    this.authUser.next(null);
   }
 }

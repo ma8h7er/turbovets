@@ -30,6 +30,11 @@ export class MenuService implements OnDestroy {
     return this._pagesMenu();
   }
 
+  /**
+   * Check if the givin route is the current one
+   * @param instruction
+   * @returns
+   */
   public isActive(instruction: any): boolean {
     return this.router.isActive(this.router.createUrlTree([instruction]), {
       paths: 'subset',

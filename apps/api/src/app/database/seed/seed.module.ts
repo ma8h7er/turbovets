@@ -6,11 +6,13 @@ import databaseConfig from '../config/database.config';
 import appConfig from '../../config/app.config';
 import { RoleSeedModule } from './role/role-seed.module';
 import { OrganizationSeedModule } from './organization/organization-seed.module';
+import { TaskSeedModule } from './task/task-seed.module';
 
 @Module({
   imports: [
     OrganizationSeedModule,
     RoleSeedModule,
+    TaskSeedModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig, appConfig],
