@@ -1,101 +1,77 @@
-# Turbovets
+# Task Management
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+This is a simple task management application built with [NX Monorepo](https://nx.dev/) tool. It was built based on specific requirements provided.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## Overview
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/node?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+The workspace has the following applications and libraries:
 
-## Run tasks
+`apps/api` is the backend app. It's a [Nest.js](https://nestjs.com/) application provides an API for the frontend app.
 
-To run the dev server for your app, use:
+`apps/dashboard` is the frontend app. It's a [Angular](https://angular.dev/) application.
 
-```sh
-npx nx serve api
-```
+`libs/auth` is a helper [Nest.js](https://nestjs.com/) module for authentication and role-based authorization.
 
-To create a production bundle:
+`libs/common` is a Javascript library provides a helper functions to be used in the workspace apps.
 
-```sh
-npx nx build api
-```
+## How it was built?
 
-To see all available targets to run for a project, run:
+1. **Backend**
 
-```sh
-npx nx show project api
-```
+    Building the backend started with database models design. Based on the requirements, the application needs the following entities:
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+    - `Organization` represents the `organizations` that users can belong to. Each organization has many users, but each user can belong to one organization.
+    - `User` represents the `users` database table. Every user should belong to an organization and has one or more roles.
+    - `Role` the user roles. The role connects with `users` table with a many-to-many relation using the `user_roles` pivot table.
+    - `Task` it has the tasks information. Each task belongs to one organization and one user.
+  
+    The following ERD design clarifies how the database tables are connected together and the columns in each table.
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-## Add new projects
+    ![ERD](/docs/erd.png)
 
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
 
-Use the plugin's generator to create new projects.
+    The `api` app provides a RESTful API to manage the tasks with some helper endpoints. It uses a basic authentication way that needs to provide a `x-user-id` with a value of the user id in the request header. This is similar to JWT authentication and could be replaced with it.
 
-To generate a new application, use:
+    The API has an HTTP interceptor to read the request header `x-user-id`, finds the user in the database by the provided id and then attach the user object in the request to be accessible during the request lifecycle.
 
-```sh
-npx nx g @nx/node:app demo
-```
+    The authorization in this app works based on the user role. Currently we have 3 roles: `Owner`, `Admin` and `Viewer`. The Owner and Admin can view,edit and delete the tasks withing the same organization. The Viewer can list tasks in the same organization only.
 
-To generate a new library, use:
+    The API has a Swagger APi documentation that can be accessed at `/api-docs` endpoint. The Swagger doc has details on every API endpoint and the request headers and responses.
 
-```sh
-npx nx g @nx/node:lib mylib
-```
+    In the API app, we can run the DB migrations and running seeders. The `SeederModule` seeds some users, organizations, roles and tasks for demo purposes.
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+2. **Frontend**
 
-## Set up CI!
+    The frontend app is an Angular application that has 3 basic endpoints to access the dashboard, task list and task form.
 
-### Step 1
+    It uses Angular Material and Tailwind for styling.
 
-To connect to Nx Cloud, run the following command:
+## Installation
 
-```sh
-npx nx connect
-```
+To setup the application on local environment, please make sure you have [Docker](https://docs.docker.com/get-started/get-docker/) and [NX CLI](https://nx.dev/getting-started) installed and follow these steps:
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+1. Clone the repoistory.
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+    ```
+    git clone git@github.com:ma8h7er/turbovets.git
+    ```
 
-### Step 2
+2. Change the directory to enter the workspace root folder: `cd turbovets`
+3. Install dependencies by ruuning `npm install`
+4. Copy the API environment file from the example provided by running 
+    ```
+    cp apps/api/.env.example apps/api/.env
+    ```
+5. Running the docker containers for Postgres and Adminer by running 
 
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/node?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+    ```
+    docker compose -f apps/api/docker-compose.yaml up -d
+    ```
+    This will run 2 containers, one for Postgres engine and the second is for Adminer which makes it easy to see the database tables, edit them or change the schema. You can access it at `http://localhost:8080/`. It uses the same DATABASE config in the `apps/api/.env` file.
+6. When the docker containers are running, you can seed the data for the demo by running `nx seed:run api`   
+7. Start the API server by running `nx serve api`.
+8. Start the frontend app by opening a new Terminal window and running `nx serve dashboard`.
+9. Access the app at `http://localhost/4200`
+10. You can access the API docs at `http://localhost:3000/api-docs`
