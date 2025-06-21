@@ -1,0 +1,60 @@
+
+<h1 class="text-xl mb-6">
+    @if(task) {
+        Edit task details
+    } @else {
+        Create a new task
+    }
+</h1>
+
+@if(form) {
+
+    <form class="mt-8" [formGroup]="form">
+    
+        <div class="flex flex-col md:flex-row">
+
+            <div class="w-full">
+
+                <!--Title field-->
+                <mat-form-field class="w-full">
+                    <mat-label>Title</mat-label>
+                    <input id="title" matInput [formControlName]="'title'">
+                    @if(form.get('title').hasError('required')) {
+                        <mat-error>Field is required</mat-error>
+                    }
+                    @if(form.get('title').hasError('minlength') || form.get('title').hasError('maxlength')) {
+                        <mat-error>Field length should be between 3 and 255 characters</mat-error>
+                    }
+                    
+                </mat-form-field>
+
+                <!--Title field-->
+                <mat-form-field class="w-full">
+                    <mat-label>Description</mat-label>
+                    <textarea matInput [formControlName]="'description'" placeholder="Enter task description" rows="4"></textarea>
+                </mat-form-field>
+
+            </div>
+
+        </div>
+
+        <div class="flex justify-between items-center mt-3">
+            <button mat-flat-button [color]="'primary'" [disabled]="form.invalid || loading" (click)="submit()">
+                <span class="flex justify-between items-center gap-2">
+                    <span>Save Task</span>
+                    @if(loading || errors?.length) {
+                    <span class="inline-flex w-[20px]">
+                        <mat-spinner></mat-spinner>
+                    </span>   
+                    }
+                </span>                
+                
+            </button>
+            <button matButton="outlined" [routerLink]="'/tasks'">
+                <span>Back</span>
+            </button>
+        </div>
+    
+    </form>
+
+}
