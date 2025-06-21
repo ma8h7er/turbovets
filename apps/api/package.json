@@ -2,6 +2,14 @@
   "name": "@turbovets/api",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "typeorm": "env-cmd ts-node --project ./tsconfig.app.json -r tsconfig-paths/register ../../node_modules/typeorm/cli.js",
+    "migration:generate": "ts-node migration.ts",
+    "postmigration:generate": "nx lint api -- --fix",
+    "migration:run": "npm run typeorm -- --dataSource=src/app/database/cli-data-source.ts migration:run",
+    "migration:revert": "npm run typeorm -- --dataSource=src/app/database/cli-data-source.ts migration:revert",
+    "schema:drop": "npm run typeorm -- --dataSource=src/app/database/cli-data-source.ts schema:drop"
+  },
   "nx": {
     "targets": {
       "build": {
