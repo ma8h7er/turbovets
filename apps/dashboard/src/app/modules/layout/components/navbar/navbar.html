@@ -3,12 +3,29 @@
         <!-- Pages menu items -->
         <div class="flex items-center gap-2">
             @for (item of menuItems; track item.label) {
-                <a [matButton]="item.active ? 'filled' : 'outlined'" 
-                    [routerLink]="item.route">
-                    {{item.label}}
-                </a>
+            <a [matButton]="item.active ? 'filled' : 'outlined'" [routerLink]="item.route">
+                {{item.label}}
+            </a>
             }
         </div>
 
+        <!-- User menu -->
+        <div class="flex items-center">
+
+            @if(authUser) {
+
+            <button matButton [matMenuTriggerFor]="menu">
+                <mat-icon class="mr-2">person</mat-icon>
+                {{ authUser.firstName }} | {{ authUser.roles[0]?.name }} | {{ authUser.organization.name }}
+            </button>
+            <mat-menu #menu="matMenu">
+                @for(user of users; track user.id) {
+                <button mat-menu-item (click)="changeUser(user)">
+                    {{ user.firstName }} | {{ user.roles[0]?.name }} | {{ user.organization.name }}
+                </button>
+                }
+            </mat-menu>
+            }
+        </div>
     </div>
 </div>

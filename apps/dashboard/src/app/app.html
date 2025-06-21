@@ -1,1 +1,15 @@
-<router-outlet></router-outlet>
+<!--Show loading spinner-->
+@if(loading()) {
+    <div class="h-screen w-full flex justify-center items-center">
+        <div class="flex flex-col justify-center items-center">
+            <mat-spinner></mat-spinner>
+
+            <h1 class="mt-6">Setup demo data</h1>
+        </div>
+        
+    </div>
+} @else if (! currentUser()) {
+    <div>Failed to load users</div>
+} @else {
+    <app-layout></app-layout>   
+}
