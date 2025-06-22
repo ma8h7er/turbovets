@@ -58,8 +58,14 @@ To setup the application on local environment, please make sure you have [Docker
     git clone git@github.com:ma8h7er/turbovets.git
     ```
 
-2. Change the directory to enter the workspace root folder: `cd turbovets`
-3. Install dependencies by ruuning `npm install`
+2. Change the directory to enter the workspace root folder:
+    ```
+    cd turbovets
+    ```
+3. Install dependencies by ruuning
+    ```
+    npm install
+    ```
 4. Copy the API environment file from the example provided by running 
     ```
     cp apps/api/.env.example apps/api/.env
@@ -69,12 +75,44 @@ To setup the application on local environment, please make sure you have [Docker
     ```
     docker compose -f apps/api/docker-compose.yaml up -d
     ```
-    This will run 2 containers, one for Postgres engine and the second is for Adminer which makes it easy to see the database tables, edit them or change the schema. You can access it at `http://localhost:8080/`. It uses the same DATABASE config in the `apps/api/.env` file.
-6. When the docker containers are running, you can seed the data for the demo by running `nx seed:run api`   
-7. Start the API server by running `nx serve api`.
-8. Start the frontend app by opening a new Terminal window and running `nx serve dashboard`.
-9. Access the app at `http://localhost/4200`
-10. You can access the API docs at `http://localhost:3000/api-docs`
+    This will run 2 containers, one for Postgres engine and the second is for Adminer. **Make sure to see the containers running and exposing the ports as you see in this screenshot**
+
+    ![ERD](/docs/docker.png)
+    
+    Adminer makes it easy to manage the database visually. You see the database tables, edit them or change the schema. You can access it at `http://localhost:8080/`. It uses the same DATABASE config in the `apps/api/.env` file.
+    
+    **NOTE: you might need to login using the host name `postgres` instead of localhost.**
+
+    ```
+    #Adminer login if you didn't change the .env file
+
+    Server: postgres
+    Username: root
+    Password: secret
+    Database: turbovets
+    ```
+6. Build the `api` app by running
+    ```
+    nx build api
+    ```    
+7. When the docker containers are running, Run the migrations
+    ```
+    nx migration:run api
+    ```
+8. Seed the data for the demo by running
+    ```
+    nx seed:run api
+    ``` 
+9. Start the API server by running
+    ```
+    nx serve api
+    ```
+10. Start the frontend app by opening a new Terminal window and running
+    ```
+    nx serve dashboard
+    ```
+11. Access the app at `http://localhost:4200`
+12.  You can access the API docs at `http://localhost:3000/api-docs`
 
 ## Future Improvements
 
