@@ -16,10 +16,12 @@
             <input matInput [formControl]="searchInputControl" [autocomplete]="'off'"
                 placeholder="Search tasks">
         </mat-form-field>
+        @if(authUser && hasActionPermission) {
         <!-- Create task button -->
         <a class="ml-4" mat-flat-button [color]="'primary'" [routerLink]="['/tasks/create']">
             Create new task
         </a>
+        }
     </div>
 </div>
 

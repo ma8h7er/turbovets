@@ -120,7 +120,7 @@ export class TaskList implements OnInit, AfterViewInit, OnDestroy {
         next: (response: any) => {
           this.tasks = response.map((t: any) => ({
             ...t,
-            status: this.statuses[t.status],
+            status: this.statuses.find((tt) => tt.id == t.status),
           }));
           this.loading.set(false);
         },
