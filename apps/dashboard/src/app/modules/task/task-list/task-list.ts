@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { TaskService } from '../services/task.service';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
-import { Task } from '../models/task.model';
+import { Status, Task, taskStatuses } from '../models/task.model';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
@@ -51,6 +51,7 @@ export class TaskList implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns: string[] = [
     'id',
     'title',
+    'status',
     'user',
     'organization',
     'actions',
@@ -65,6 +66,7 @@ export class TaskList implements OnInit, AfterViewInit, OnDestroy {
   private _authService = inject(AuthService);
   hasActionPermission = false;
   loading = signal(true);
+  statuses: Status[] = taskStatuses;
 
   constructor() {
     // get current user
@@ -116,7 +118,10 @@ export class TaskList implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe({
         next: (response: any) => {
-          this.tasks = response;
+          this.tasks = response.map((t: any) => ({
+            ...t,
+            status: this.statuses[t.status],
+          }));
           this.loading.set(false);
         },
         error: (response: any) => {

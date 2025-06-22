@@ -5,6 +5,17 @@ export interface Task {
   title: string;
   description?: string;
   user?: User;
-  status?: number;
+  status?: Status;
   createdAt?: string;
 }
+
+export interface Status {
+  id: number;
+  name: string;
+}
+
+export const taskStatuses: Status[] = [
+  { id: 1, name: 'Created' },
+  { id: 2, name: 'In Progress' },
+  { id: 3, name: 'Completed' },
+];

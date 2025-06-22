@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { Task } from '../models/task.model';
+import { Status, Task, taskStatuses } from '../models/task.model';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import {
@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-task-form',
@@ -27,11 +28,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatButtonModule,
     MatProgressSpinnerModule,
     RouterLink,
+    MatSelectModule,
   ],
 })
 export class TaskForm implements OnInit, OnDestroy {
   taskId: number;
   task: Task;
+  statuses: Status[] = taskStatuses;
   private _unsubscribeAll = new Subject<any>();
   form: FormGroup<any>;
   loading = false;
@@ -95,6 +98,7 @@ export class TaskForm implements OnInit, OnDestroy {
         ],
       ],
       description: [this.task?.description || ''],
+      status: [this.task?.status?.id || 1],
     });
   }
 

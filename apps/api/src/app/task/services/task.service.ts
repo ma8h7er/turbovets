@@ -8,6 +8,7 @@ import { RoleEnum } from '@turbovets/auth';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 import { TaskResponseDto } from '../dto/task-response.dto';
+import { TaskStatuses } from '../enums/task-status.enum';
 
 @Injectable()
 export class TaskService {
@@ -140,6 +141,7 @@ export class TaskService {
   ): Promise<TaskResponseDto> {
     const newTask = this.taskRepository.create({
       ...createTaskDto,
+      status: TaskStatuses.COMPLETED,
       user,
       organization: user.organization,
     });
