@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-task-form',
@@ -40,6 +41,7 @@ export class TaskForm implements OnInit, OnDestroy {
   private _router = inject(Router);
   private _fb = inject(FormBuilder);
   private _taskService = inject(TaskService);
+  private _snackBar = inject(MatSnackBar);
 
   constructor() {
     this._activatedRoute.params
@@ -109,7 +111,7 @@ export class TaskForm implements OnInit, OnDestroy {
     this.errors = '';
 
     this._taskService
-      .createOrUpdate(this.form.value)
+      .createOrUpdate(this.form.value, this.taskId)
       .pipe(takeUntil(this._unsubscribeAll))
       .subscribe({
         next: () => {
@@ -120,6 +122,8 @@ export class TaskForm implements OnInit, OnDestroy {
         },
         error: () => {
           this.errors = 'Failed to save the task';
+          this._snackBar.open('Failed to save the task');
+          this.form.reset();
           this.loading = false;
         },
       });

@@ -161,6 +161,7 @@ export class TaskList implements OnInit, AfterViewInit, OnDestroy {
           .pipe(takeUntil(this._unsubscribeAll))
           .subscribe({
             next: () => {
+              this.search();
               // show success message
               this._snackBar.open('Task was deleted!', 'OK');
             },
